@@ -9,7 +9,41 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'perfil_screen.dart';
 import 'tela_login.dart';
-import 'package:http/http.dart';
+
+class _FormPageState extends State<Form> {
+  final _formKey = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            TextFormField(
+              validator: (value) {
+                if (value.isEmpty) return "O campo é obrigatório.";
+                return null;
+              },
+            ),
+            SizedBox(height: 30),
+            RaisedButton(
+              child: Text("Enviar Dados"),
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text("Enviando dados para o servidor..."),
+                    duration: Duration(seconds: 3),
+                  ));
+                }
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class Consulta extends StatelessWidget {
   final Widget child;
@@ -20,6 +54,7 @@ class Consulta extends StatelessWidget {
   String emailUser;
   String email;
   String rgPerfil;
+
 
   void getCurrentUserEmail() async {
     User emailUser = _auth.currentUser;
@@ -378,12 +413,6 @@ class ConsultaField extends StatelessWidget {
     );
   }
 
-  String fetch() {
-    try {
-      var url = 'localhost:8888/example';
-    } catch (error) {
-      print(error);
-      return error.toString();
-    }
-  }
+
+
 }
